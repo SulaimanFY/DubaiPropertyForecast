@@ -9,6 +9,7 @@ seg(mEl, ["rent", "price"], state.measure, v => { state.measure = v; render(); }
 
 const MODEL = "gbm";
 const LABEL = Object.fromEntries(sc.table.map(r => [r.method, r.label]));
+const SHORT = { gbm: "This model", no_change: "No change", last_trend: "Last year's trend", dubai_trend: "Dubai-wide trend", ets: "ETS" };
 
 function tiles() {
   const h = sc.headline[state.measure];
@@ -31,7 +32,7 @@ function chart() {
   box.innerHTML = "";
   const rows = sc.by_h.filter(r => r.measure === state.measure && r.period === "test");
   const methods = [...new Set(rows.map(r => r.method))].sort((a, b) => (b === MODEL) - (a === MODEL));
-  const W = Math.max(320, box.clientWidth), H = 300, m = { t: 16, r: W < 560 ? 16 : 190, b: 34, l: 48 };
+  const W = Math.max(320, box.clientWidth), H = 300, m = { t: 16, r: W < 560 ? 16 : 170, b: 34, l: 48 };
   const x = d3.scaleLinear().domain([1, 12]).range([m.l, W - m.r]);
   const y = d3.scaleLinear().domain([0, d3.max(rows, r => r.median_error) * 1.12]).nice(4).range([H - m.b, m.t]);
   const svg = d3.select(box).append("svg").attr("viewBox", `0 0 ${W} ${H}`).attr("role", "img")
@@ -59,7 +60,7 @@ function chart() {
       .attr("stroke-dasharray", isModel ? null : gi % 2 ? null : "4 3")
       .attr("d", d3.line().x(d => x(d.h)).y(d => y(d.median_error)));
     const last = pts.at(-1);
-    ends.push({ y: y(last.median_error), label: LABEL[meth], v: last.median_error, isModel, c });
+    ends.push({ y: y(last.median_error), short: SHORT[meth] || LABEL[meth], v: last.median_error, isModel, c });
     const s = el("span"), k = el("i", { class: "key-line" });
     k.style.background = c; s.append(k, document.createTextNode(LABEL[meth])); lg.append(s);
   }
@@ -69,7 +70,7 @@ function chart() {
     for (const e of ends) {
       svg.append("text").attr("x", W - m.r + 10).attr("y", e.y + 4).attr("font-size", 12.5)
         .attr("font-weight", e.isModel ? 650 : 400).attr("fill", e.isModel ? "var(--ink)" : "var(--ink-2)")
-        .text(`${pct(e.v, false)} ${e.label.split(" (")[0]}`);
+        .text(`${pct(e.v, false)} ${e.short}`);
     }
   }
   // table twin
