@@ -1,5 +1,5 @@
 {
- "run": "rebuild",
+ "run": "2026-09",
  "checks": [
   {
    "check": "rows received",
@@ -63,6 +63,14 @@
    "value": 0.0,
    "unit": "share",
    "rule": "<= 0.5%",
+   "status": "pass"
+  },
+  {
+   "check": "12-month forecasts beyond +/-60%",
+   "measure": "model",
+   "value": 0.0,
+   "unit": "share",
+   "rule": "<= 1% of segments",
    "status": "pass"
   }
  ]

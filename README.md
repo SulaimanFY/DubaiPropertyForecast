@@ -2,7 +2,21 @@
 
 **What will rent and prices be next year in my area?** 12-month forecasts of rent and sale prices for Dubai areas, by home type and bedroom count, built from Dubai Land Department open data. A scheduled pipeline downloads the new data every month, checks it, retrains the model, scores past forecasts against what really happened and republishes the site.
 
-> Status: first version in progress. The live site and accuracy figures will appear here once the full history has been processed.
+**Live site: [sulaimanfy.github.io/DubaiPropertyForecast](https://sulaimanfy.github.io/DubaiPropertyForecast/)**
+
+## Accuracy on the test years
+
+Forecasts made from 2023 to 2025, each scored 12 months later against what really happened. Those years were kept aside while the method was designed. Details and every horizon on the [track record](https://sulaimanfy.github.io/DubaiPropertyForecast/track-record.html) page.
+
+| 12 months ahead | Rent | Sale price |
+|---|---|---|
+| Typical error of this model (median) | **4.9%** | **9.9%** |
+| Assuming no change | 9.8% | 12.5% |
+| Best simple benchmark (Dubai-wide trend applied to every area) | 8.6% | 8.4% |
+| Real outcomes inside the 80% range | 82% | 69% |
+| Direction right, where the real move was over 2% | 88% | 72% |
+
+For rents, the model halves the error of assuming no change and beats every benchmark. For sale prices it beats no change, but the Dubai-wide trend did better and the ranges were too narrow. The site says so too.
 
 ## What it does
 
@@ -15,6 +29,8 @@
 - Turns each forecast into a typical home: "a 1-bedroom apartment in Dubai Marina rents for about AED X a year today; most likely AED Y in 12 months, 8 in 10 chance between A and B".
 - Ranks areas by expected change, and shows the gross rental yield where both rent and price exist.
 - Publishes an honest track record: a backtest on years the model never saw, compared with simple benchmarks, plus a live record of every published forecast against the real outcome.
+
+The history runs from January 2010 to September 2026: about 2.5 million new lease contracts and 1.0 million sales after cleaning. 109 areas have enough recent deals for a published forecast.
 
 ## Method in short
 
@@ -48,7 +64,7 @@ The live feed only covers the current year. The full history comes from two data
 pip install -r requirements.txt
 python -m dpf.run rebuild --raw <folder>   # monthly statistics from the history files (one-off)
 python -m dpf.run update     # add recent months from the live feed, with data checks
-python -m dpf.run backtest   # accuracy on past years (slow)
+python -m dpf.run backtest   # accuracy on past years (about 3.5 hours on 4 cores)
 python -m dpf.run forecast   # retrain, forecast, archive, score
 python -m dpf.run site       # write the website into _site/
 pytest -q
