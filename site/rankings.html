@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dubai areas ranked by expected rent and price change</title>
+<meta name="description" content="Which Dubai areas are expected to see the biggest rent and price rises over the next 12 months, with ranges, from Dubai Land Department data.">
+<link rel="icon" href="assets/img/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<section class="page-head">
+  <div class="wrap">
+    <h1>Where are rents and prices heading?</h1>
+    <p class="lede">Every area with enough recent deals, ranked by the most likely change over the next 12 months. The thin line shows the 8-in-10 range: a long line means the forecast is less certain.</p>
+  </div>
+</section>
+<main class="wrap">
+  <section class="card pad" style="margin-top:24px">
+    <div class="controls" role="group" aria-label="Filter the ranking">
+      <div class="field"><span class="lbl">Show</span><div class="seg rentprice" id="measure"></div></div>
+      <div class="field"><span class="lbl">Home</span><div class="seg" id="ptype"></div></div>
+      <div class="field"><span class="lbl">Bedrooms</span><div class="seg" id="beds"></div></div>
+    </div>
+  </section>
+  <section class="grid2">
+    <div class="card pad">
+      <h2 id="up-title">Biggest expected rises</h2>
+      <p class="small muted" id="up-sub"></p>
+      <div id="up"></div>
+    </div>
+    <div class="card pad">
+      <h2 id="down-title">Weakest outlook</h2>
+      <p class="small muted" id="down-sub"></p>
+      <div id="down"></div>
+    </div>
+  </section>
+  <section class="card pad">
+    <div class="chart-head">
+      <h2>All areas</h2>
+      <div class="combo" style="width:300px"><input id="search" type="search" placeholder="Filter by area name" aria-label="Filter by area name"></div>
+    </div>
+    <div class="tbl-wrap"><table id="table"></table></div>
+    <p class="tiny muted" style="margin-top:12px">Only areas with at least 30 deals in the last 3 months and 3 years of history are ranked. "Today" is the typical deal of the last 3 months. Click an area to see its full forecast.</p>
+  </section>
+</main>
+<script type="module" src="assets/js/rankings.js"></script>
+</body>
+</html>

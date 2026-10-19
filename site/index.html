@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dubai Property Forecast: rent and prices next year, by area</title>
+<meta name="description" content="12-month forecasts of rent and sale prices for Dubai areas, by home type and bedrooms, built from Dubai Land Department open data and updated monthly, with an honest track record.">
+<link rel="icon" href="assets/img/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/style.css">
+<meta property="og:title" content="What will rent and prices be next year in your Dubai area?">
+<meta property="og:description" content="12-month forecasts by area, home type and bedrooms, from official Dubai Land Department records. Updated monthly.">
+<meta property="og:image" content="assets/img/og.png">
+</head>
+<body>
+<section class="hero">
+  <div class="wrap">
+    <h1>What will <em>rent and prices</em> be next year in your area?</h1>
+    <p class="lede">Forecasts for the next 12 months, area by area across Dubai, built from official Dubai Land Department records of every registered sale and lease. Updated every month.</p>
+    <div class="facts" id="facts"></div>
+  </div>
+</section>
+
+<main class="wrap">
+  <div class="card pad lift" id="panel">
+    <div class="controls" role="group" aria-label="Choose what to forecast">
+      <div class="field">
+        <label for="area-input">Area</label>
+        <div class="combo" id="combo">
+          <input id="area-input" type="text" role="combobox" aria-expanded="false" aria-controls="area-list" aria-autocomplete="list" autocomplete="off" spellcheck="false" placeholder="Search an area, e.g. Dubai Marina">
+          <svg class="chev" width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 8l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <ul id="area-list" role="listbox" aria-label="Areas"></ul>
+        </div>
+      </div>
+      <div class="field"><span class="lbl">Home</span><div class="seg" id="ptype"></div></div>
+      <div class="field"><span class="lbl">Bedrooms</span><div class="seg" id="beds"></div></div>
+      <div class="field"><span class="lbl">Show</span><div class="seg rentprice" id="measure"></div></div>
+    </div>
+    <div class="answer" id="answer" aria-live="polite"></div>
+  </div>
+
+  <section class="card pad">
+    <div class="chart-head">
+      <div>
+        <h2 id="chart-title">Rent per sq ft, history and forecast</h2>
+        <div class="legend" id="legend"></div>
+      </div>
+      <div class="seg" id="span"></div>
+    </div>
+    <div class="chart" id="chart"></div>
+    <p class="tiny muted" id="chart-note" style="margin-top:10px"></p>
+    <button class="viewtoggle" id="tbl-toggle" type="button" aria-expanded="false">Show as a table</button>
+    <div class="tbl-wrap" id="tbl" hidden></div>
+  </section>
+
+  <section class="grid3">
+    <div class="card pad">
+      <h3>What "typical" means</h3>
+      <p class="small ink2">For each area, home type and bedroom count, we take every registered deal of the last 3 months, drop the 5% most extreme on each side and average the price (or yearly rent) per sq ft. A typical home is that figure times the typical size of homes traded there.</p>
+    </div>
+    <div class="card pad">
+      <h3>How sure is this?</h3>
+      <p class="small ink2" id="sure">Every forecast comes with a range. The darker band is where the real figure should land half the time, the lighter band 8 times in 10. We check this against what really happened, every month.</p>
+      <a class="small" href="track-record.html">See the track record →</a>
+    </div>
+    <div class="card pad">
+      <h3>Updated every month</h3>
+      <p class="small ink2">An automatic job downloads the latest Land Department data, checks it, retrains the model, scores last month's forecasts and republishes this site. If a check fails, nothing is published.</p>
+      <a class="small" href="how-it-works.html">How it works →</a>
+    </div>
+  </section>
+</main>
+<script src="assets/vendor/d3.min.js"></script>
+<script type="module" src="assets/js/forecast.js"></script>
+</body>
+</html>

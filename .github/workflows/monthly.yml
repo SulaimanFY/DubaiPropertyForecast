@@ -1,0 +1,89 @@
+name: Monthly update
+
+# Downloads the new month of Dubai Land Department data, checks it, retrains, scores past
+# forecasts and republishes the site. If any step fails, nothing is published, the last good
+# version stays online, and an issue is opened.
+on:
+  schedule:
+    - cron: "0 4 3 * *"      # 3rd of every month, 04:00 UTC (08:00 in Dubai)
+    - cron: "0 16 31 12 *"   # 31 December: store the year's last weeks before the live feed moves to the new year
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+  issues: write
+
+concurrency:
+  group: monthly-update
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install
+        run: pip install -r requirements.txt
+
+      - name: Download and check the new data
+        run: python -m dpf.run update
+
+      - name: Run the tests
+        run: pytest -q
+
+      - name: Retrain, forecast and score
+        if: github.event.schedule != '0 16 31 12 *'
+        run: python -m dpf.run forecast --run-url "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+
+      - name: Build the site
+        if: github.event.schedule != '0 16 31 12 *'
+        run: python -m dpf.run site
+
+      - name: Save data, forecast archive and reports
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data
+          if git diff --cached --quiet; then echo "No data changes"; exit 0; fi
+          git commit -m "Monthly update: data to $(cat data/reports/data_through.txt)"
+          git push
+
+      - uses: actions/upload-pages-artifact@v3
+        if: github.event.schedule != '0 16 31 12 *'
+        with:
+          path: _site
+
+      - name: Report a failed run
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const url = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            let body = `The monthly update stopped, so nothing was published and the site keeps the last good forecast.\n\nRun log: ${url}`;
+            try {
+              const fs = require("fs");
+              const r = JSON.parse(fs.readFileSync("data/reports/data_checks.json", "utf8"));
+              const bad = r.checks.filter(c => c.status === "fail");
+              if (bad.length) body += "\n\nFailed checks:\n" + bad.map(c => `- ${c.measure}: ${c.check} (value ${c.value}, rule ${c.rule})`).join("\n");
+            } catch (e) {}
+            await github.rest.issues.create({ ...context.repo, title: `Monthly update failed (${new Date().toISOString().slice(0, 10)})`, body });
+
+  deploy:
+    needs: update
+    if: github.event.schedule != '0 16 31 12 *'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
