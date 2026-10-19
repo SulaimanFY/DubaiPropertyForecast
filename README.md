@@ -7,10 +7,11 @@
 ## What it does
 
 - Forecasts two things, 1 to 12 months ahead, with 50% and 80% ranges:
-  - the yearly rent per sq ft of **new** Ejari lease contracts,
+  - the yearly rent per sq ft of **new** Ejari lease contracts for a single home, by contract start month,
   - the sale price per sq ft of residential sales (ready and off-plan),
   
   for every Dubai area, apartments and villas or townhouses, studios to 4+ bedrooms, wherever there are at least 30 deals in the last 3 months and 3 years of history.
+- Bedrooms are grouped by floor area, because rent contracts rarely state them. The size limits are measured once from the sales that do state bedrooms (a home counts as 2 bedrooms when its size is closer to a typical 2-bedroom than to a typical 1- or 3-bedroom) and saved in `data/size_bands.json`. The same groups apply to rents and prices, so yields compare like with like.
 - Turns each forecast into a typical home: "a 1-bedroom apartment in Dubai Marina rents for about AED X a year today; most likely AED Y in 12 months, 8 in 10 chance between A and B".
 - Ranks areas by expected change, and shows the gross rental yield where both rent and price exist.
 - Publishes an honest track record: a backtest on years the model never saw, compared with simple benchmarks, plus a live record of every published forecast against the real outcome.
@@ -41,9 +42,11 @@ A second run on 31 December stores the last weeks of the year before the live fe
 
 ## Run it yourself
 
+The live feed only covers the current year. The full history comes from two datasets on data.dubai, which only open from inside the UAE: [Real Estate Transactions](https://data.dubai/en/l/470061) (2 CSV parts, about 1.1 GB) and [Rent Contracts](https://data.dubai/en/l/468586) (11 parts, about 5.1 GB). Download the CSV parts into one folder, then:
+
 ```bash
 pip install -r requirements.txt
-python -m dpf.run rebuild    # monthly statistics from the full history files in .raw/
+python -m dpf.run rebuild --raw <folder>   # monthly statistics from the history files (one-off)
 python -m dpf.run update     # add recent months from the live feed, with data checks
 python -m dpf.run backtest   # accuracy on past years (slow)
 python -m dpf.run forecast   # retrain, forecast, archive, score
@@ -53,6 +56,6 @@ pytest -q
 
 ## Data and licence
 
-Source: Dubai Land Department open data (sales transactions and Ejari rent contracts), Government of Dubai. Only monthly statistics derived from it are stored and published here, never individual records. This is an independent project, not affiliated with or endorsed by the Dubai Land Department or the Government of Dubai. Forecasts are statistical estimates, not financial advice.
+Source: Dubai Land Department open data, [Real Estate Transactions](https://data.dubai/en/l/470061) and [Rent Contracts](https://data.dubai/en/l/468586), published on [data.dubai](https://data.dubai) under the Dubai Open Data Licence. Only monthly statistics derived from it are stored and published here, never individual records; those statistics (`data/`) are shared under the same licence. This is an independent project, not associated with or endorsed by the Dubai Land Department or the Government of Dubai. Forecasts are statistical estimates, not financial advice.
 
 Code: MIT licence.

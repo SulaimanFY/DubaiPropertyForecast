@@ -22,7 +22,7 @@
     <div class="steps" style="margin-top:16px">
       <div class="step"><h3>Download</h3><p>Fetch the newest sales and Ejari lease records from the Dubai Land Department open data service.</p></div>
       <div class="step"><h3>Check</h3><p>Run data checks: volumes, missing fields, impossible values, duplicates, sudden jumps. Any failure stops the run.</p></div>
-      <div class="step"><h3>Measure</h3><p>Turn deals into a monthly typical price and rent per sq ft for each area, home type and bedroom count.</p></div>
+      <div class="step"><h3>Measure</h3><p>Turn deals into a monthly typical price and rent per sq ft for each area, home type and size group.</p></div>
       <div class="step"><h3>Retrain</h3><p>Retrain the model on all history, recalibrate its ranges on the last 12 months, and check it has not got worse.</p></div>
       <div class="step"><h3>Score</h3><p>Compare every past forecast with the month that has just been recorded, and add it to the public track record.</p></div>
       <div class="step"><h3>Publish</h3><p>Save this month's forecast unchanged in the archive and republish this website.</p></div>
@@ -39,7 +39,7 @@
   <section class="grid2">
     <div class="card pad">
       <h3>What is forecast</h3>
-      <p class="small ink2">Two things, 12 months ahead: the yearly rent per sq ft of <b>new</b> lease contracts (renewals follow rent-cap rules and lag the market), and the sale price per sq ft of residential sales, ready and off-plan. Each is forecast for every area, for apartments and villas or townhouses, and for studios to 4+ bedrooms, wherever there are at least 30 deals in the last 3 months and 3 years of history.</p>
+      <p class="small ink2">Two things, 12 months ahead: the yearly rent per sq ft of <b>new</b> lease contracts (renewals follow rent-cap rules and lag the market), and the sale price per sq ft of residential sales, ready and off-plan. Each is forecast for every area, for apartments and villas or townhouses, and for studios to 4+ bedrooms grouped by floor area (rent records rarely list bedrooms, so the size limits are set from sales that do), wherever there are at least 30 deals in the last 3 months and 3 years of history.</p>
     </div>
     <div class="card pad">
       <h3>The typical level</h3>
@@ -66,6 +66,7 @@
   <section class="card pad">
     <h2>Data and licence</h2>
     <p class="small ink2" id="attribution"></p>
+    <ul class="small" id="source-links"></ul>
     <p class="small ink2">Built with Python (pandas, LightGBM, statsforecast), GitHub Actions and GitHub Pages, with D3.js for the charts. The code and the monthly statistics are open on <a id="repo-link" href="#">GitHub</a>.</p>
   </section>
 </main>

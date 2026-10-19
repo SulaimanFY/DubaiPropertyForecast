@@ -54,8 +54,16 @@ GATES = {
 DEFAULT_AREA_SLUG = "dubai-marina"     # the area the forecast page opens on
 
 SOURCE_NAME = "Dubai Land Department (DLD) open data"
+# Dubai Open Data Licence: name the source and link it, do not present the work as theirs,
+# and share adapted data (our monthly statistics) under the same licence.
+SOURCE_LINKS = {
+    "Real Estate Transactions": "https://data.dubai/en/l/470061",
+    "Rent Contracts": "https://data.dubai/en/l/468586",
+    "Dubai Open Data Licence": "https://data.dubai",
+}
 ATTRIBUTION = (
-    "Source: Dubai Land Department open data (sales transactions and Ejari rent contracts), "
-    "Government of Dubai. Only monthly statistics derived from it are published here. "
-    "Independent project, not affiliated with or endorsed by the Dubai Land Department or the Government of Dubai."
+    "Source: Dubai Land Department open data (Real Estate Transactions and Rent Contracts), published on "
+    "data.dubai under the Dubai Open Data Licence. Only monthly statistics derived from it are published here, "
+    "under the same licence. Independent project, not associated with or endorsed by the Dubai Land Department "
+    "or the Government of Dubai."
 )

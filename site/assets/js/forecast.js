@@ -1,6 +1,6 @@
 import {
   chrome, json, seg, setSeg, el, monthName, addMonths, num, aed, psf, pct, measureColor,
-  BEDS_SHORT, homeLabel,
+  BEDS_SHORT, homeLabel, sizeNote, relabelBeds,
 } from "./common.js";
 import { fanChart } from "./chart.js";
 
@@ -76,7 +76,9 @@ async function update() {
   const beds = bedsFor(state.measure);
   if (!beds.includes(state.beds)) state.beds = beds.includes("all") ? "all" : beds[0];
   setSeg(ptypeEl, state.ptype, ptypes);
+  relabelBeds(bedsEl, state.ptype);
   setSeg(bedsEl, state.beds, beds);
+  document.getElementById("beds-note").textContent = sizeNote(meta.size_groups, state.ptype, state.beds);
   setSeg(measureEl, state.measure, measures.filter(m => bedsFor(m).includes(state.beds)).length ? ["rent", "price"].filter(m => bedsFor(m).includes(state.beds)) : measures);
   const url = new URL(location.href);
   for (const k of ["slug", "ptype", "beds", "measure"]) url.searchParams.set(k, state[k]);

@@ -1,8 +1,9 @@
 """The Dubai Land Department open data feed (current calendar year), queried day by day.
 
-Sales: POST https://gateway.dubailand.gov.ae/open-data/transactions
-Rents: POST https://gateway.dubailand.gov.ae/open-data/rents
+Sales: POST https://gateway.dubailand.gov.ae/open-data/transactions   (by transaction date)
+Rents: POST https://gateway.dubailand.gov.ae/open-data/rents          (new contracts, by start date)
 No login. Results come in pages of up to 5,000 rows; each row carries the total count.
+Pages are sorted on a timestamp, so paging through a busy day is stable.
 """
 import json
 import time
@@ -19,8 +20,9 @@ PAGE = 5000
 ENDPOINTS = {
     "price": ("transactions", {"P_GROUP_ID": "1", "P_IS_OFFPLAN": "", "P_IS_FREE_HOLD": "", "P_AREA_ID": "",
                                "P_USAGE_ID": "", "P_PROP_TYPE_ID": "", "P_SORT": "TRANSACTION_NUMBER_ASC"}),
-    "rent": ("rents", {"P_DATE_TYPE": "0", "P_IS_FREE_HOLD": "", "P_AREA_ID": "", "P_USAGE_ID": "",
-                       "P_PROP_TYPE_ID": "", "P_VERSION": "", "P_SORT": "CONTRACT_NUMBER_ASC"}),
+    # P_DATE_TYPE 1 = contract start date (the history files only have that date), P_VERSION 1 = new contracts
+    "rent": ("rents", {"P_DATE_TYPE": "1", "P_IS_FREE_HOLD": "", "P_AREA_ID": "", "P_USAGE_ID": "",
+                       "P_PROP_TYPE_ID": "", "P_VERSION": "1", "P_SORT": "REGISTRATION_DATE_ASC"}),
 }
 
 

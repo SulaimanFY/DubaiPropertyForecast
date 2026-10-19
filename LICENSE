@@ -20,6 +20,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-The licence above covers the code only. The statistics under data/ are derived from
-Dubai Land Department open data and keep that data's own terms; only monthly aggregates
-are published here, never individual records. Credit: Dubai Land Department, Government of Dubai.
+The licence above covers the code only. The monthly statistics under data/ are adapted from
+Dubai Land Department open data (Real Estate Transactions, https://data.dubai/en/l/470061, and
+Rent Contracts, https://data.dubai/en/l/468586) and are shared under the same Dubai Open Data
+Licence (https://data.dubai). Only monthly aggregates are published, never individual records.
+This project is independent and is not associated with or endorsed by the Dubai Land Department
+or the Government of Dubai.

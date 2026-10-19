@@ -37,8 +37,8 @@ def feed(path, d, extra, take=2):
 def main():
     sales = {"P_GROUP_ID": "1", "P_IS_OFFPLAN": "", "P_IS_FREE_HOLD": "", "P_AREA_ID": "", "P_USAGE_ID": "",
              "P_PROP_TYPE_ID": "", "P_SORT": "TRANSACTION_NUMBER_ASC"}
-    rents = {"P_DATE_TYPE": "0", "P_IS_FREE_HOLD": "", "P_AREA_ID": "", "P_USAGE_ID": "", "P_PROP_TYPE_ID": "",
-             "P_VERSION": "", "P_SORT": "CONTRACT_NUMBER_ASC"}
+    rents = {"P_DATE_TYPE": "1", "P_IS_FREE_HOLD": "", "P_AREA_ID": "", "P_USAGE_ID": "", "P_PROP_TYPE_ID": "",
+             "P_VERSION": "1", "P_SORT": "REGISTRATION_DATE_ASC"}
     recent = date.today() - timedelta(days=3)
     for d in (recent, date(2026, 1, 15), date(2025, 12, 15), date(2025, 6, 16), date(2023, 6, 15), date(2019, 6, 17), date(2012, 6, 18)):
         res = feed("transactions", d, sales)
@@ -51,8 +51,7 @@ def main():
             print("  rent fields:", sorted(res[0].keys()))
             print("  sample:", json.dumps(res[0], ensure_ascii=False)[:900])
     probe("DLD open data page", "GET", "https://dubailand.gov.ae/en/open-data/real-estate-data/", show=0)
-    probe("data.dubai", "GET", "https://data.dubai/")
-    probe("Dubai Pulse", "GET", "https://www.dubaipulse.gov.ae/")
+    probe("data.dubai (history files)", "GET", "https://data.dubai/en/l/470061")
 
 
 if __name__ == "__main__":

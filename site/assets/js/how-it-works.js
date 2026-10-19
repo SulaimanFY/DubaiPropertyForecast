@@ -4,6 +4,11 @@ chrome("how-it-works.html");
 document.getElementById("repo-link").href = REPO;
 const [meta, checks] = await Promise.all([json("data/meta.json"), json("data/checks.json")]);
 document.getElementById("attribution").textContent = meta.attribution;
+const links = document.getElementById("source-links");
+for (const [t, h] of Object.entries(meta.source_links || {})) {
+  const li = document.createElement("li"), a = document.createElement("a");
+  a.href = h; a.textContent = t; li.append(a); links.append(li);
+}
 const rl = document.getElementById("run-line");
 rl.append(document.createTextNode(`Last run ${longDate(meta.updated)}, with data to ${monthName(meta.data_through)}. `));
 if (meta.run_url) rl.append(el("a", { href: meta.run_url }, "See the run log on GitHub"));

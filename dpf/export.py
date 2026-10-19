@@ -7,6 +7,7 @@ from datetime import date
 import numpy as np
 import pandas as pd
 
+from . import bands as B
 from . import config as C
 from . import models as M
 from .panel import Panel
@@ -112,4 +113,6 @@ def meta_block(p: Panel, deals: dict, recent_error: float, run_url: str | None) 
         "run_url": run_url,
         "source": C.SOURCE_NAME,
         "attribution": C.ATTRIBUTION,
+        "source_links": C.SOURCE_LINKS,
+        "size_groups": B.ranges(),
     }

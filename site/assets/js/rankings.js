@@ -1,4 +1,4 @@
-import { chrome, json, seg, setSeg, el, num, pct, psf, measureColor, BEDS_SHORT } from "./common.js";
+import { chrome, json, seg, setSeg, el, num, pct, psf, measureColor, BEDS_SHORT, relabelBeds } from "./common.js";
 
 chrome("rankings.html");
 const rows = await json("data/rankings.json");
@@ -39,7 +39,7 @@ function bars(box, list, dom) {
 
 let cur = [];
 function render() {
-  setSeg(mEl, state.measure); setSeg(pEl, state.ptype); setSeg(bEl, state.beds);
+  setSeg(mEl, state.measure); setSeg(pEl, state.ptype); relabelBeds(bEl, state.ptype); setSeg(bEl, state.beds);
   cur = rows.filter(r => r.measure === state.measure && r.ptype === state.ptype && r.beds === state.beds);
   const sorted = [...cur].sort((a, b) => b.q50 - a.q50);
   const n = Math.min(12, Math.floor(sorted.length / 2));

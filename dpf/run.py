@@ -1,6 +1,6 @@
 """Command line entry point.
 
-python -m dpf.run rebuild   build the monthly statistics from the full history files (one-off)
+python -m dpf.run rebuild   build the monthly statistics from the full history files (one-off, --raw <folder>)
 python -m dpf.run update    download recent months from the live feed, check them, store their statistics
 python -m dpf.run forecast  retrain, forecast 12 months ahead, score past forecasts, save the archive
 python -m dpf.run site      write the website (data + pages) into _site/ from what is stored
@@ -28,24 +28,46 @@ def previous_month(today=None) -> str:
 
 
 def cmd_rebuild(args):
-    from .sources import bulk
-    from .clean import clean
+    """One-off, on a computer that can download the history files (see sources/bulk.py)."""
+    from pathlib import Path
 
-    stats, counts = [], {}
+    from . import bands as B
+    from .sources import bulk
+
+    raw = Path(args.raw) if args.raw else C.RAW_DIR
+    work = Path(args.work) if args.work else raw / "_dpf_work"
+    last = previous_month()
+    counts, hints = {}, []
     for m in C.MEASURES:
-        raw = bulk.load(m)
-        rec, cnt = clean(raw, m)
-        counts[m] = cnt
-        log(f"{m}: {len(rec):,} usable deals from {cnt['rows']:,} in-scope rows")
-        stats.append(A.monthly_stats(rec))
+        log(f"{m}: reading {', '.join(p.name for p in bulk.files(raw, m))}")
+        counts[m], h = bulk.clean_all(raw, m, work, last, log=log)
+        hints.append(h)
+    # bedroom groups by floor area, measured on sales that state their bedrooms (2015 onwards)
+    sales = pd.concat([bulk.read_year(ps)[["ptype", "size_sqft", "stated_beds"]]
+                       for y, ps in bulk.years(work, "price").items() if y >= "2015"], ignore_index=True)
+    bands = B.calibrate(sales)
+    B.save(bands)
+    log(f"size groups: {bands['limits_sqft']} ({bands['source']})")
+    stats = []
+    for m in C.MEASURES:
+        for y, ps in bulk.years(work, m).items():
+            rec = bulk.read_year(ps)
+            rec["beds"] = B.assign(rec["size_sqft"], rec["ptype"], bands)
+            stats.append(A.monthly_stats(rec))
+            log(f"  {m} {y}: {len(rec):,} deals")
     new = pd.concat(stats, ignore_index=True)
     for m in C.MEASURES:
         A.save(new, m)
+    h = pd.concat(hints).groupby(["area_id", "master_project"])["deals"].sum().reset_index()
+    h = h.sort_values(["area_id", "deals"], ascending=[True, False]).groupby("area_id").head(6)
+    h.to_csv(C.DATA / "area_hints.csv", index=False)
     checks = V.quality_checks(counts)
     V.save(checks, "rebuild")
+    for c in checks:
+        log(f"  [{c['status']}] {c['measure']}: {c['check']} = {c['value']} ({c['rule']})")
     (C.REPORT_DIR / "deal_counts.json").write_text(json.dumps(
         {m: int(new[(new.measure == m) & (new.area_id == C.DUBAI) & (new.beds == C.ALL)]["n"].sum()) for m in C.MEASURES}))
-    log("rebuild done")
+    log(f"rebuild done: months {new['month'].min()} to {new['month'].max()}. The work folder {work} can be deleted.")
 
 
 def cmd_update(args):
@@ -163,7 +185,9 @@ def cmd_backtest(args):
 def main():
     ap = argparse.ArgumentParser(prog="dpf")
     sub = ap.add_subparsers(dest="cmd", required=True)
-    sub.add_parser("rebuild")
+    r = sub.add_parser("rebuild")
+    r.add_argument("--raw", default="", help="folder with the downloaded transactions_*.csv and rent_contracts_*.csv")
+    r.add_argument("--work", default="", help="scratch folder for cleaned records (default: <raw>/_dpf_work)")
     sub.add_parser("update")
     f = sub.add_parser("forecast")
     f.add_argument("--run-url", default="")
