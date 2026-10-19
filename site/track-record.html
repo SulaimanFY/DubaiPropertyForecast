@@ -22,6 +22,7 @@
       <div class="seg rentprice" id="measure"></div>
     </div>
     <div class="grid4" id="tiles" style="margin-top:12px"></div>
+    <p class="ink2" id="verdict" style="margin:16px 0 0"></p>
   </section>
 
   <section class="card pad">
@@ -52,11 +53,11 @@
   <section class="grid2">
     <div class="card pad">
       <h3>How the test works</h3>
-      <p class="small ink2">At each test date the model is retrained from scratch on the data known that month, exactly as the monthly job does today. It never sees later months. The error is the gap between the forecast typical price per sq ft and the real one, as a percentage of the real one.</p>
+      <p class="small ink2">At each test date the model is retrained from scratch on the data known that month, exactly as the monthly job does today. It never sees later months. The error is the gap between the forecast typical price per sq ft and the real one, as a percentage of the real one. One simplification: past months come from today's files, which include a few records registered late.</p>
     </div>
     <div class="card pad">
       <h3>What it cannot do</h3>
-      <p class="small ink2">No model foresaw the 2020 pandemic drop or the size of the 2021 to 2024 boom. Forecasts follow momentum, local supply of deals and the gap between rents and prices. A sudden shock will show up as a miss here, and in the live record.</p>
+      <p class="small ink2">Forecasts follow momentum, the local supply of deals and the gap between rents and prices, so they are late at turning points. Forecasts made in 2017 and 2018 expected rents 10% to 20% higher than they turned out, as rents fell. Forecasts made from October 2020 to April 2021 came in 10% to 19% below the real rents and prices, as the boom began. A sudden shock will show up as a miss here, and in the live record.</p>
     </div>
   </section>
 </main>

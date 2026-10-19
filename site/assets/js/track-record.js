@@ -23,6 +23,7 @@ function tiles() {
   tile("Benchmark error", pct(h.naive12, false), "if you simply assume no change");
   tile("Inside the 8-in-10 range", `${Math.round(h.coverage80 * 100)}%`, "of real outcomes (80% is the target)");
   tile("Direction right", `${Math.round(h.direction * 100)}%`, "of cases where the real move was over 2%");
+  document.getElementById("verdict").textContent = h.verdict || "";
 }
 
 function chart() {

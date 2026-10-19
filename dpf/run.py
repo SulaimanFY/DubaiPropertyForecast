@@ -179,6 +179,9 @@ def cmd_backtest(args):
     res.to_csv(C.REPORT_DIR / "backtest_results.csv.gz", index=False, compression={"method": "gzip", "mtime": 0})
     s = score(res, by=("measure", "period", "method", "h"))
     s.to_csv(C.REPORT_DIR / "backtest_scores.csv", index=False)
+    # the full results are large (not committed); the site only needs which origins were scored how far ahead
+    o = res[res["y"].notna()].groupby(["origin", "period"])["h"].max().rename("max_h_scored").reset_index()
+    o.to_csv(C.REPORT_DIR / "backtest_origins.csv", index=False)
     log(score(res[res["h"] == C.HORIZON], by=("measure", "period", "method")).to_string())
 
 
