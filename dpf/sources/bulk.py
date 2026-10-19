@@ -8,7 +8,9 @@ module runs on that computer. Only the monthly statistics it produces are stored
 
 Large files come split into numbered parts. The parts are read in order as one stream: a part that
 starts with the header row again has it skipped, a part that starts mid-line is joined to the last one.
+The site stores the parts gzip-compressed, so a downloaded ".csv" may really be a .csv.gz: both are read.
 """
+import gzip
 import io
 import re
 from pathlib import Path
@@ -23,7 +25,8 @@ FIRST_MONTH = "2010-01"
 
 
 def files(folder: Path, measure: str) -> list[Path]:
-    found = sorted(Path(folder).glob(PATTERNS[measure]))
+    # "name (1).csv" is a second copy of the same download: ignore it
+    found = sorted(p for p in Path(folder).glob(PATTERNS[measure]) if re.search(r"_\d{4}\.csv$", p.name))
     if not found:
         raise FileNotFoundError(f"no {PATTERNS[measure]} in {folder}")
     # if several exports were downloaded, use the newest one (its date is in the name)
@@ -46,7 +49,10 @@ class Parts(io.RawIOBase):
         if self.i >= len(self.paths):
             self.f = None
             return
-        self.f = open(self.paths[self.i], "rb")
+        f = open(self.paths[self.i], "rb")
+        packed = f.read(2) == b"\x1f\x8b"
+        f.seek(0)
+        self.f = gzip.GzipFile(fileobj=f) if packed else f
         first = self.f.readline()
         bare = first.removeprefix(b"\xef\xbb\xbf")
         if self.header is None:

@@ -32,6 +32,16 @@ def test_parts_that_repeat_the_header(tmp_path):
     assert len(got) == 10
 
 
+def test_gzipped_parts_and_duplicate_downloads(tmp_path):
+    import gzip
+    rows = [sale(i, 12, 80, 1_700_000) for i in range(8)]
+    (tmp_path / "transactions_y_0001.csv").write_bytes(gzip.compress((SALES_HEADER + "".join(rows[:5])).encode()))
+    (tmp_path / "transactions_y_0002.csv").write_bytes(gzip.compress("".join(rows[5:]).encode()))
+    (tmp_path / "transactions_y_0002 (1).csv").write_text(SALES_HEADER + sale(50, 1, 70, 1))
+    got = pd.concat(bulk.chunks(tmp_path, "price"))
+    assert got["transaction_id"].tolist() == [str(i) for i in range(8)]
+
+
 def test_live_rent_feed_rows_are_cleaned():
     feed = pd.DataFrame([
         {"REGISTRATION_DATE": "2026-09-15T09:00:01", "START_DATE": "2026-09-15T00:00:00", "VERSION_EN": "New",
