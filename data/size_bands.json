@@ -1,0 +1,47 @@
+{
+  "limits_sqft": {
+    "apartment": [
+      569,
+      986,
+      1541,
+      2675
+    ],
+    "villa": [
+      1801,
+      2321
+    ]
+  },
+  "median_sqft": {
+    "apartment": {
+      "studio": 419,
+      "1": 774,
+      "2": 1255,
+      "3": 1891,
+      "4+": 3782
+    },
+    "villa": {
+      "2": 1691,
+      "3": 1919,
+      "4+": 2809
+    }
+  },
+  "deals": {
+    "apartment": {
+      "studio": 171268,
+      "1": 309757,
+      "2": 186642,
+      "3": 53870,
+      "4+": 7477
+    },
+    "villa": {
+      "2": 7677,
+      "3": 43560,
+      "4+": 38710
+    }
+  },
+  "source": "sales records with stated bedrooms",
+  "measured": {
+    "apartment": true,
+    "villa": true
+  }
+}

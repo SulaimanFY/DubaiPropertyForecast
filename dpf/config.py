@@ -44,7 +44,7 @@ BACKTEST_STEP = 3                      # one forecast origin every 3 months
 GATES = {
     "volume_ratio": (0.4, 2.5),        # new month's deal count vs. median of the previous 12 months
     "max_missing_share": 0.10,         # share of rows missing area, size or amount
-    "max_out_of_bounds_share": 0.05,
+    "max_out_of_bounds_share": 0.08,   # history 2010-2026: rents 5.1%, sales 0.8% of records are recording errors
     "max_duplicate_share": 0.005,
     "max_dubai_level_jump": 0.25,      # Dubai-wide level may not move more than 25% in one month
     "max_error_worsening": 0.25,       # recent backtest error may not get more than 25% worse than last run
