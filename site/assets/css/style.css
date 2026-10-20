@@ -197,7 +197,7 @@ section { margin: 28px 0; }
 .tip {
   position: absolute; pointer-events: none; z-index: 10; min-width: 190px; padding: 10px 12px; border-radius: 10px;
   background: var(--surface); border: 1px solid var(--border); box-shadow: 0 8px 28px rgba(0,0,0,0.16); font-size: 13px;
-  opacity: 0; transition: opacity 0.12s; color: var(--ink);
+  opacity: 0; transition: opacity 0.12s; color: var(--ink); white-space: nowrap;
 }
 .tip .t { color: var(--muted); font-size: 12px; margin-bottom: 4px; }
 .tip .r { display: flex; align-items: center; gap: 8px; justify-content: space-between; }

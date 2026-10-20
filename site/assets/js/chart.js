@@ -94,7 +94,8 @@ export function fanChart(container, opt) {
       if (opt.size) row(opt.homeLabel, aed(d.q50 * opt.size));
     }
     const tw = tip.offsetWidth, cw = container.clientWidth;
-    tip.style.left = `${Math.min(Math.max(0, px + 14), cw - tw)}px`;
+    // right of the crosshair, or left of it when there is no room (never over the hovered point)
+    tip.style.left = `${Math.max(0, px + 14 + tw <= cw ? px + 14 : px - 14 - tw)}px`;
     tip.style.top = `${Math.max(0, y(v) - 70)}px`;
     tip.style.opacity = 1;
   };
